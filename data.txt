@@ -1,0 +1,42 @@
+confusion matrix for sample tweets data 
+{'precion': 0.995212447636146, 'recall': 0.9978, 'f1_score': 0.9965045440926794, 'mse': 0.0035, 'linear kappa': 0.9953333438488653, 'quadratic kappa': 0.9964999999825, 'accuracy': 0.9965}
+[[4989.   24.]
+ [  11. 4976.]]
+
+data for sample_tweets with neutral data
+
+{'precion': 0.6720459897492728, 'recall': 0.7114679571784719, 'f1_score': 0.6911953269696538, 'mse': 0.3178618565772107, 'linear kappa': 0.5766697442463079, 'quadratic kappa': 0.6821381432091667, 'accuracy': 0.6821381434227893}
+[[9703. 4735.]
+ [3935. 8903.]]
+ adding neutrals to trainx and test x
+{'precion': 0.6396049144784389, 'recall': 0.6562036579337618, 'f1_score': 0.6477979748688544, 'mse': 0.35677212061295105, 'linear kappa': 0.5244106063566261, 'quadratic kappa': 0.643227879084353, 'accuracy': 0.643227879387049}
+[[7965. 4488.]
+ [4173. 7650.]]
+
+
+data for text_emotions.csv positive and negative tweets only
+{'precion': 0.7858590978205778, 'recall': 0.5663926940639269, 'f1_score': 0.6583165269079715, 'mse': 0.3421192475289616, 'linear kappa': 0.5477596157204317, 'quadratic kappa': 0.6578807505898231, 'accuracy': 0.6578807524710384}
+[[3101.  845.]
+ [2374. 3089.]]
+
+ data for text_emotions.csv positive negative and neutral
+ {'precion': 0.6817275747508306, 'recall': 0.5087393082930457, 'f1_score': 0.5826648683183077, 'mse': 0.40286438703487976, 'linear kappa': 0.46827224409992113, 'quadratic kappa': 0.5971356120367067, 'accuracy': 0.5971356129651202}
+[[4104. 1916.]
+ [3963. 4610.]]
+
+ data for imdb_dataset.csv containig 50k text
+ {'precion': 0.8403124599820719, 'recall': 0.8749333333333333, 'f1_score': 0.8572734992488079, 'mse': 0.14566666666666667, 'linear kappa': 0.8058876091566821, 'quadratic kappa': 0.8543333330096295, 'accuracy': 0.8543333333333334}
+[[6562. 1247.]
+ [ 938. 6253.]]
+
+ data for imdb_dataset.csv containg 50K + neutral dataset 8K tweets
+ {'precion': 0.7312035251996695, 'recall': 0.7892390011890607, 'f1_score': 0.7591136526090065, 'mse': 0.2504458977407848, 'linear kappa': 0.6667718670858106, 'quadratic kappa': 0.74955410156762, 'accuracy': 0.7495541022592151}
+[[5310. 1952.]
+ [1418. 4776.]]
+
+
+ data for sentiment analysis 140 dataset containing 1.6 million tweets
+ {'precion': 0.7666653613710824, 'recall': 0.7341875, 'f1_score': 0.7500750266584083, 'mse': 0.24463125, 'linear kappa': 0.6740199992160723, 'quadratic kappa': 0.7553687499988055, 'accuracy': 0.75536875}
+[[117470.  35752.]
+ [ 42530. 124248.]]
+ 
