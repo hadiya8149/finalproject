@@ -1,4 +1,4 @@
-from naive_bayes_scratch_oge import naive_bayes_predict, logprior, loglikelihood 
+from naive_bayes_scratch import naive_bayes_predict, logprior, loglikelihood 
 import pandas as pd
 
 test_data = pd.read_csv("data_analysis2.csv")

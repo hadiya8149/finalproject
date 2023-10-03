@@ -1,31 +1,49 @@
-# calculate the probability of cancer patient and diagnostic test
+from confluent_kafka import Producer
+import praw
+from dotenv import load_dotenv
+import os
+load_dotenv()
+data = {}
+reddit = praw.Reddit(
+                client_id=os.getenv("CLIENT_ID"),
+                client_secret=os.getenv("CLIENT_SECRET"),
+                password=os.getenv("PASSWORD"), 
+                user_agent=os.getenv("USER_AGENT"),
+                username=os.getenv("USERNAME"),)
+print(reddit.user.me())
+producer = Producer(
+    {'bootstrap.servers':'localhost:9092'} 
+                         )
+def delivery_report(err, msg):
+    if err is not None:
+        print('Message delivery failed: {}'.format(err))
+    elif err:
+        print(err)
+    else:
+        print("Message delivered to {} [{}]".format(msg.topic(), msg.partition))
 
-# calculate P(A|B) given P(A), P(B|A), P(B|not A)
-def bayes_theorem(p_a, p_b_given_a, p_b_given_not_a):
-	# calculate P(not A)
-	not_a = 1 - p_a
-	# calculate P(B)
-	p_b = p_b_given_a * p_a + p_b_given_not_a * not_a
-	# calculate P(A|B)
-	p_a_given_b = (p_b_given_a * p_a) / p_b
-	return p_a_given_b
 
-# P(A)
-p_a = 0.0002
-# P(B|A)
-p_b_given_a = 0.85
-# P(B|not A)
-p_b_given_not_a = 0.05
-# calculate P(A|B)
-result = bayes_theorem(p_a, p_b_given_a, p_b_given_not_a)
-# summarize
-print('P(A|B) = %.3f%%' % (result * 100))
+posts=[]
+i = 0
+for submission in reddit.subreddit("bitcoin").stream.submissions():
+    if submission.selftext == "":
+        continue
+    i+=1
+    print(submission.title, submission.selftext)
+    post = {
+        "title":submission.title,
+        "text": submission.selftext,
+        "url": submission.url
+    }
+    posts.append({
+        "title": submission.title,
+        "text": submission.selftext,
+        "url": submission.url
+    })
+    print("sending")
+    
+    producer.poll(0)
+    producer.produce('redditStream', str(post).encode('utf-8'), callback=delivery_report)
 
-
-# classification accurace problems
-"""
-classification accuracy = correct predictions / total predictions
-classification accuracy = correct predictions / total predictions * 100
-
-error rate = (1 - (correct predictions / total predictions)) * 100
-"""
+# for post in posts:
+producer.flush(0)

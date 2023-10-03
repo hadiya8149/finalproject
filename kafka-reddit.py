@@ -1,18 +1,18 @@
 from confluent_kafka import Producer
 import praw
-from time import sleep
-import json
+from dotenv import load_dotenv
+import os
+load_dotenv()
 data = {}
 reddit = praw.Reddit(
-                 client_id="RYwplqMp-ThgglPOj6-ZTQ",
-                client_secret="rKC3QsYyR9E9XsMY7nAO8v5A_cvYfg",
-                password="TVsA/ZRHE2gEM7A", 
-                user_agent="rsa dashboard by u/LiteratureChemical50",
-                username="LiteratureChemical50",)
+                client_id=os.getenv("CLIENT_ID"),
+                client_secret=os.getenv("CLIENT_SECRET"),
+                password=os.getenv("PASSWORD"), 
+                user_agent=os.getenv("USER_AGENT"),
+                username=os.getenv("USERNAME"),)
 print(reddit.user.me())
 producer = Producer(
     {'bootstrap.servers':'localhost:9092'} 
-        
                          )
 def delivery_report(err, msg):
     if err is not None:
@@ -22,17 +22,35 @@ def delivery_report(err, msg):
 
 
 posts=[]
-for submission in reddit.subreddit("bitcoin").hot(limit=1000):
-        if submission.selftext == "":
-            continue
-        posts.append({
-            "title": submission.title,
-            "text": submission.selftext,
-            "url": submission.url
-        })
 
+"""
+for submission in reddit.subreddit("bitcoin").stream.submissions():
+     if submission.selftext == "":
+        continue
+    post = {
+        "title": submission.title,
+        "text": submission.selftext,
+        "url": submission.url
+
+    # i will also add the timestammp in later coding phase
+    # this code is for realtime streaming to kafka but the problem is duplicated posts so i haven't implemented it yet
+    producer.poll(0)
+    producer.produce('redditStream', str(post).encode('utf-8'), callback=delivery_report)
+    }
+
+"""
+for submission in reddit.subreddit("bitcoin").hot(limit=None):
+    if submission.selftext == "":
+        continue
+    posts.append({
+        "title": submission.title,
+        "text": submission.selftext,
+        "url": submission.url
+    })
+
+print(len(posts))
 for post in posts:
     producer.poll(0)
-    producer.produce('testevent', str(post).encode('utf-8'), callback=delivery_report)
-  
-producer.flush()
+    producer.produce('redditStream', str(post).encode('utf-8'), callback=delivery_report)
+
+producer.flush(0)
