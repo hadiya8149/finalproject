@@ -1,7 +1,0 @@
-github fine grained token
-
-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
-
-
-github personal access token general
-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
