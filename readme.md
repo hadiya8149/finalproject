@@ -1,9 +1,10 @@
-Final Project Prototype
+# Final Project Prototype
 
 This repository contains the prototype for my final project, which is a real-time sentiment analysis system. The system uses Kafka to stream textual data from Reddit, and then uses natural language processing (NLP) techniques and machine learning algorithms to analyze the sentiment of the data. T
 
 Getting Started
 To get started, you will need to install the following dependencies:
+```
 Kafka
 Python 3
 confluent_kafka==2.2.0
@@ -14,6 +15,8 @@ praw==7.7.1
 pymongo==4.5.0
 python-dotenv==1.0.0
 scikit_learn==1.3.1
+
+```
 
 run pip install requirements.txt for installing dependencies.
 
@@ -50,19 +53,22 @@ run kafka-reddit and consumer.py
 
 1. Data Collection:
    - Integrate with reddit API to collect real-time textual data for sentiment analysis.
-        - Use praw library to connect to reddit API
-        - reddit = praw.Reddit(
-        -          client_id=CLIENT_ID,
-        -         client_secret=CLIENT_SECRET,
-        -         password=PASSWORD, 
-        -         user_agent=USER_AGENT,
-        -         username=USERNAME,)
-        - for submission in reddit.subreddit("bitcoin").stream.submissions():
-        -     if submission.selftext is not empty
-        -      then 
+```
+      Use praw library to connect to reddit API
+         reddit = praw.Reddit(
+                  client_id=CLIENT_ID,
+                 client_secret=CLIENT_SECRET,
+                 password=PASSWORD, 
+                 user_agent=USER_AGENT,
+                 username=USERNAME,)
+         for submission in reddit.subreddit("bitcoin").stream.submissions():
+             if submission.selftext is not empty
+              then 
                     add it to list
                after the posts list is complete send it to the producer
                
+
+```
 
 
 
@@ -72,27 +78,30 @@ run kafka-reddit and consumer.py
 
 
         - receive incoming data using kafka consumer
-           -      while True:
-           -          msg = consumer.poll(1.0)
-            -         if msg is None:
-            -             continue
-           -          if msg.error():
-            -             print("Consumer error: {}".format(msg.error()))
-            -             continue        
+        ```
+         while True:
+                     msg = consumer.poll(1.0)
+                     if msg is None:
+                         continue
+                     if msg.error():
+                         print("Consumer error: {}".format(msg.error()))
+                         continue     
+        ```
+                   
  
 2. Sentiment Analysis:
    - Apply natural language processing techniques to preprocess and analyze the collected textual data.
+```
+         def clean_text(text):
+             text = text.lower() # lower case
+             text = re.sub(r'[^\w\s]', '', text) #remove punctuation marks
+             text = re.sub(" +", " ", text) # remove multiple spaces
+             text = re.sub(r'http\S+', '', text, flags=re.MULTILINE) # remove links
+             stop_words = set(stopwords.words('english')) # remove stopwords
+             text = ' '.join([word for word in text.split() if word not in stop_words])
+             return text
 
-        - def clean_text(text):
-           -  text = text.lower() # lower case
-          -   text = re.sub(r'[^\w\s]', '', text) #remove punctuation marks
-          -   text = re.sub(" +", " ", text) # remove multiple spaces
-          -   text = re.sub(r'http\S+', '', text, flags=re.MULTILINE) # remove links
-          -   stop_words = set(stopwords.words('english')) # remove stopwords
-          -   text = ' '.join([word for word in text.split() if word not in stop_words])
-          -   return text
-
-
+```
 
    - Utilize machine learning algorithms to train a sentiment analysis model for accurate sentiment classification.
         - implement naive bayes from scratch to train sentiment analysis 
