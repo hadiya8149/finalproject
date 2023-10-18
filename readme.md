@@ -24,20 +24,20 @@ run pip install requirements.txt for installing dependencies.
 Once you have installed the dependencies, you can download and start the Kafka environment by running the following commands:
 
 
-STEP 1: GET KAFKA
+## STEP 1: GET KAFKA
 Download the latest Kafka release and extract it:
 
 $ tar -xzf kafka_2.13-3.5.0.tgz
 $ cd kafka_2.13-3.5.0
 
-STEP 2: START THE KAFKA ENVIRONMENT
+## STEP 2: START THE KAFKA ENVIRONMENT
 NOTE: Your local environment must have Java 8+ installed.
 
 
 Kafka with ZooKeeper
 Run the following commands in order to start all services in the correct order:
 
-# Start the ZooKeeper service
+## Start the ZooKeeper service
 $ bin/zookeeper-server-start.sh config/zookeeper.properties
 Open another terminal session and run:
 
@@ -45,11 +45,9 @@ Open another terminal session and run:
 $ bin/kafka-server-start.sh config/server.properties
 
 
-After setting the environment 
+After setting the environment  run kafka-reddit and consumer.py
 
-run kafka-reddit and consumer.py
-
-
+### Data collection and Sentiment analysis
 
 1. Data Collection:
    - Integrate with reddit API to collect real-time textual data for sentiment analysis.
