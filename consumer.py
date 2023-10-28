@@ -2,12 +2,13 @@ from confluent_kafka import Consumer
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
-load_dotenv()
+
 import ast
 import re
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from naive_bayes_scratch import naive_bayes_predict, loglikelihood, logprior
+load_dotenv()
 consumer = Consumer(
     {
         'bootstrap.servers':'localhost:9092', 
@@ -29,7 +30,7 @@ def get_database():
 
 try:
     db  = get_database()
-    posts_collection = db["posts"]
+    posts_collection = db["posts_10/18/2023"]
     print("connected to database")
 except:
     print("could not connect to mongodb")
