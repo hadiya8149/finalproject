@@ -40,6 +40,31 @@ def process_text(text):
     return text_clean
 
 
+def count_freqs(result, tweets, ys):
+    '''
+    Input:
+        result: a dictionary that will be used to map each pair to its frequency
+        tweets: a list of tweets
+        ys: a list corresponding to the sentiment of each tweet (either 0 or 1)
+    Output:
+        result: a dictionary mapping each pair to its frequency
+    '''
+
+    for y, tweet in zip(ys, tweets):
+        for word in process_text(tweet):
+            # define the key, which is the word and label tuple
+            pair = (word,y)
+
+            # if the key exists in the dictionary, increment the count
+            if pair in result:
+                result[pair] += 1
+
+            # else, if the key is new, add it to the dictionary and set the count to 1
+            else:
+                result[pair] = 1
+
+    return result
+
 def lookup(freqs, word, label):
     '''
     Input:

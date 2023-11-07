@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="stylesheet" text="css" href="../static/index.css">
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+    </head>
+    <body>
+        <h1>Real time sentiment analysis dashboard</h1>
+        <form method="POST">
+        <input name="query" text="search" id="query" />
+      </form>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+          </div>
+          <div>
+            <img src="../static/p_wc.png" alt="positve word lcoud">
+            <img src="../static/n_wc.png" alt="negative word cloud">
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script >
+            const ctx = document.getElementById('myChart');
+            const data ={{data}}
+            new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['positive', 'negative'],
+                datasets: [{
+                  label: 'Sentiment analysis',
+                  data: data,
+                  borderWidth: 1,
+                  backgroundColor:['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)']
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+            </script>
+    </body>
+</html>
