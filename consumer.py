@@ -2,24 +2,27 @@ from confluent_kafka import Consumer
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
-
 import ast
 import re
+# import nltk
+# nltk.download("stopwords")
 from nltk.corpus import stopwords
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from naive_bayes_scratch import naive_bayes_predict, loglikelihood, logprior
+import pickle
+from model import naive_bayes_predict
+
+lp = pickle.load(open('./logprior_imdb.pkl', 'rb'))
+llk = pickle.load(open('./loglikelihood_imdb.pkl', 'rb'))
 load_dotenv()
 consumer = Consumer(
     {
         'bootstrap.servers':'localhost:9092', 
-        'group.id':'redditgroup', 
+        'group.id':'newGroup', 
         'auto.offset.reset':'earliest'
     })
 
-vader_model = SentimentIntensityAnalyzer()
 
 clean_text = []
-consumer.subscribe(['redditStream'])
+consumer.subscribe(['quickstart-events'])
 
 def get_database(): 
     CONNECTION_STRING = os.getenv('MONGO_URI')
@@ -30,7 +33,7 @@ def get_database():
 
 try:
     db  = get_database()
-    posts_collection = db["posts_10/18/2023"]
+    posts_collection = db["posts_drugs_imdb"]
     print("connected to database")
 except:
     print("could not connect to mongodb")
@@ -44,6 +47,7 @@ def clean_text(text):
     text = ' '.join([word for word in text.split() if word not in stop_words])
     return text
 
+
 while True:
     msg = consumer.poll(1.0)
     if msg is None:
@@ -56,14 +60,14 @@ while True:
     text = post["text"]
     text = clean_text(text)
     
-    bayes_score = naive_bayes_predict(text, logprior, loglikelihood)
+    bayes_score = naive_bayes_predict(text, lp,llk)
     
     try:
         data = {
             "title":post["title"],
             "text": post["text"],
             "score":bayes_score,
-            "created_at": post.created_utc
+            "created_at": post["created_utc"]
         }
         posts_collection.insert_one(data)
         print("inserting document")
