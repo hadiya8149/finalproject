@@ -7,16 +7,55 @@
     </head>
     <body>
         <h1>Real time sentiment analysis dashboard</h1>
-        <form method="POST">
+        <div class="container">
+        <form method="POST" id="query-form">
         <input name="query" text="search" id="query" />
+      </div>
       </form>
-        <div class="chart-container">
-            <canvas id="myChart"></canvas>
-          </div>
-          <div>
+      <ul class="tabs" role="tablist">
+
+        <li>
+            <input type="radio" name="tabs" id="tab1" checked />
+            <label for="tab1"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls ="panel1"
+                    tabindex="0">Chart
+            </label>
+            <div id = "tab-content1" class="chart-container tab-content  " role="tabpanel" aria-labelledby="description" aria-hidden="false">
+              <canvas id="myChart"></canvas>
+            </div>
+
+        </li>        
+        <li>
+          <input type="radio" name="tabs" id="tab2"/>
+          <label
+                  for="tab2"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls ="panel2"
+                    tabindex="1">Table
+        </label>
+          <div id="tab-content2" 
+          class="tab-content table"
+          role="tabpanel" 
+          aria-labelledby="table" 
+          aria-hidden="true"">
+          {% for table in tables%}
+              {{table|safe}}
+          {% endfor %}
+        </div>
+          
+        
+        </li>
+      </ul>
+
+        
+
+          <!-- <div>
             <img src="../static/p_wc.png" alt="positve word lcoud">
             <img src="../static/n_wc.png" alt="negative word cloud">
-          </div>
+          </div> -->
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script >
             const ctx = document.getElementById('myChart');

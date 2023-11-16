@@ -11,20 +11,7 @@ load_dotenv()
 producer = Producer(
     {'bootstrap.servers':'localhost:9092'} 
                          )
-# def get_database(): 
-#     CONNECTION_STRING = os.getenv('MONGO_URI')
 
-#     client = MongoClient(CONNECTION_STRING)
-#     return client['reddit_posts']
-
-
-
-
-# try:
-#     db  = get_database()
-    
-# except:
-#     print("could not connect to mongodb")
 
 def delivery_report(err, msg):
     if err is not None:

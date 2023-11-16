@@ -10,14 +10,14 @@ from nltk.corpus import stopwords
 import pickle
 from model import naive_bayes_predict
 
-lp = pickle.load(open('./logprior_imdb.pkl', 'rb'))
-llk = pickle.load(open('./loglikelihood_imdb.pkl', 'rb'))
+lp = pickle.load(open('./logprior.pkl', 'rb'))
+llk = pickle.load(open('./loglikelihood.pkl', 'rb'))
 load_dotenv()
 consumer = Consumer(
     {
         'bootstrap.servers':'localhost:9092', 
         'group.id':'newGroup', 
-        'auto.offset.reset':'earliest'
+        'auto.offset.reset':'earliest',
     })
 
 
@@ -33,7 +33,7 @@ def get_database():
 
 try:
     db  = get_database()
-    posts_collection = db["posts_drugs_imdb"]
+    posts_collection = db["posts_drugs_ts"]
     print("connected to database")
 except:
     print("could not connect to mongodb")
@@ -47,31 +47,36 @@ def clean_text(text):
     text = ' '.join([word for word in text.split() if word not in stop_words])
     return text
 
-
 while True:
-    msg = consumer.poll(1.0)
-    if msg is None:
-        continue
-    if msg.error():
-        print("Consumer error: {}".format(msg.error()))
-        continue
-    data = msg.value().decode('utf-8')
-    post = ast.literal_eval(data)
-    text = post["text"]
-    text = clean_text(text)
     
-    bayes_score = naive_bayes_predict(text, lp,llk)
+    data =[]
+    records = consumer.consume(num_messages=100)
+    for msg in records:
+        if msg is None:
+            continue
+        if msg.error():
+            print("Consumer error: {}".format(msg.error()))
+            continue
     
+        msg = msg.value().decode('utf-8')
+        post = ast.literal_eval(msg)
+        text = post["text"]
+        text = clean_text(text)
+        
+        bayes_score = naive_bayes_predict(text, lp,llk)
+        data.append({
+                "title":post["title"],
+                "text": post["text"],
+                "score":bayes_score,
+                "created_at": post["created_utc"]
+            })
     try:
-        data = {
-            "title":post["title"],
-            "text": post["text"],
-            "score":bayes_score,
-            "created_at": post["created_utc"]
-        }
-        posts_collection.insert_one(data)
-        print("inserting document")
+        
+        posts_collection.insert_many(data)
+
+        print("inserting documents")
+        
     except:
-        print("could not insert into mongodb")
+        print("could not insert documents  into mongodb")
 
 consumer.close()
