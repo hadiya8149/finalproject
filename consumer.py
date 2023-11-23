@@ -10,8 +10,8 @@ from nltk.corpus import stopwords
 import pickle
 from model import naive_bayes_predict
 
-lp = pickle.load(open('./logprior.pkl', 'rb'))
-llk = pickle.load(open('./loglikelihood.pkl', 'rb'))
+lp = pickle.load(open('./logprior_imdb.pkl', 'rb'))
+llk = pickle.load(open('./loglikelihood_imdb.pkl', 'rb'))
 load_dotenv()
 consumer = Consumer(
     {
@@ -21,7 +21,6 @@ consumer = Consumer(
     })
 
 
-clean_text = []
 consumer.subscribe(['quickstart-events'])
 
 def get_database(): 
@@ -33,7 +32,7 @@ def get_database():
 
 try:
     db  = get_database()
-    posts_collection = db["posts_drugs_ts"]
+    posts_collection = db["posts_Jokes"]
     print("connected to database")
 except:
     print("could not connect to mongodb")
@@ -51,6 +50,7 @@ while True:
     
     data =[]
     records = consumer.consume(num_messages=100)
+    print(type(records))
     for msg in records:
         if msg is None:
             continue

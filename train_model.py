@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
-from utils import lookup, process_text, count_freqs
-from nltk.corpus import  twitter_samples
-from sklearn.preprocessing import MinMaxScaler
+from utils import lookup, count_freqs
+# from nltk.corpus import  twitter_samples
 import pickle
 
 
@@ -29,12 +28,9 @@ test_y = np.append(np.ones(len(test_pos)), np.zeros(len(test_neg)))
 
 
 
-result={}
 
-tweets=[]
 freqs = count_freqs({}, train_x, train_y)
-pos_dict = {}
-neg_dict ={}
+
 
 loglikelihood={}
 logprior=0

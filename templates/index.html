@@ -10,8 +10,11 @@
         <div class="container">
         <form method="POST" id="query-form">
         <input name="query" text="search" id="query" />
-      </div>
+        <input type="submit" id="submit" value="Query"/>
       </form>
+      </div>
+     
+      <h3>Subreddit: {{query}}</h3>
       <ul class="tabs" role="tablist">
 
         <li>
@@ -22,6 +25,7 @@
                     aria-controls ="panel1"
                     tabindex="0">Chart
             </label>
+
             <div id = "tab-content1" class="chart-container tab-content  " role="tabpanel" aria-labelledby="description" aria-hidden="false">
               <canvas id="myChart"></canvas>
             </div>
@@ -34,16 +38,37 @@
                     role="tab"
                     aria-selected="true"
                     aria-controls ="panel2"
-                    tabindex="1">Table
+                    tabindex="1">Posts
         </label>
-          <div id="tab-content2" 
-          class="tab-content table"
-          role="tabpanel" 
-          aria-labelledby="table" 
-          aria-hidden="true"">
-          {% for table in tables%}
-              {{table|safe}}
-          {% endfor %}
+          <div id="tab-content2" class="tab-content"  role="tabpanel" aria-labelledby="table" aria-hidden="true"">
+          <div id="post-tbl-div">
+            <div id="post-tbl_wrapper" class="dataTables_wrapper">
+              <div class="dataTables_scroll">
+                <table class="dataTable">
+                  <thead>
+                  <tr>
+                    <th class="column1" rowspan="1" colspan="1" >Title</th>
+                    <th class="column2"  rowspan="1" colspan="2" ">text</th>
+                    <th class="column3"  rowspan="1" colspan="1" >score</th>
+                    <th class="column4"  rowspan="1" colspan="1" >created at</th>
+      
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for item in cursor %}
+                      <tr>
+                        <td  rowspan="1" colspan="1" class="title"> {{item.title}} </td>
+                        <td colspan="2" class="post"> {{item.text}} </td>
+                        <td  rowspan="1" colspan="1" class="score" > {{item.score}} </td>
+                        <td  rowspan="1" colspan="1" class="created_at"> {{item.created_at}} </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
         </div>
           
         
@@ -80,5 +105,32 @@
               }
             });
             </script>
+            <div>
+              <h4>What Do I Do?</h4>
+              <p>
+                  Type a keyword into the input field, then click the Query button. Recent posts from the subreddit are pulled from Reddit and visualized in the Chart Tab as scores. 
+              </p>
+              <h4>What Am I Seeing</h4>
+              <p>
+                Posts are visualized in different ways in three tabs at the top of the window.
+              </p>
+                <ol>
+                  <p>
+                    <b>Sentiment score.</b> Each post is given a score , an estimate of the emotion contained in the posts-s text. Unpleasant posts have score less than 0 and pleasant posts have a score greater than 1.
+                  <br>
+                  <b>Posts.</b> Posts are listed to show theri date, title, Sentiment score and text.
+                  <br>
+                  <b>Words cloud.</b> Word cloud from the most frequent words are formed.
+                  </p>
+                </ol>
+              
+              <h4>Keywords</h4>
+              <p>You can query one keyword at once. Subreddit must be joined in order to fetch posts from that subreddit</p>
+           
+              <h4>How Do You Estimate Sentiment</h4>
+            <p>
+              I used naive bayes algorithm to calculate the score of each post. It calculates the frequency of positive and negative words in the dictionary from the pre trained model then multiply their logs.
+            </p>
+            </div>
     </body>
 </html>

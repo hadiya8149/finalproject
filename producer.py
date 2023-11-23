@@ -2,7 +2,6 @@ from confluent_kafka import Producer
 from dotenv import load_dotenv
 import praw
 import os
-from pymongo import MongoClient
 
 """
 In this file we fetch the data from reddit api and send it to kafka cluster using producer
@@ -27,7 +26,6 @@ reddit = praw.Reddit(
                 password=os.getenv("PASSWORD"), 
                 user_agent=os.getenv("USER_AGENT"),
                 username=os.getenv("USERNAME"),)
-print(reddit.user.me())
 
 posts=[]
 def stream_posts(query):
@@ -41,8 +39,9 @@ def stream_posts(query):
             "url": submission.url,
             "created_utc":submission.created_utc,
             "votes":submission.score,
-
         })
+        print(submission.score, submission.url)
+
     print(len(posts))
     for post in posts:
         producer.poll(0)
