@@ -31,14 +31,12 @@ def get_scores(collection):
     n_posts=[]
     for i in cursor:
         if i["score"] <=0:
-            n.append(i["score"])
+            n.append(round(i["score"], 3))
             n_posts.append(i["text"])
         else:
-            p.append(i["score"])
+            p.append(round(i["score"], 3))
             p_posts.append(i["text"])
-    print(len(p), len(n))
     data = [p,n]
-    print("done processing")
     return data
 
 
@@ -50,17 +48,19 @@ def home_page():
     if request.method == 'POST':
         query = request.form["query"]
         
-        # flag = stream_posts(query)
+        flag = stream_posts(query)
 
-        # if flag:
-        data = get_scores(db[f"posts_{query}"])
-        cursor =  list(db[f"posts_{query}"].find({}, {"_id":0, "title":1, "text":1, "score":1, "created_at":1}, limit=100))
+        if flag:
+            data = get_scores(db[f"posts_{query}"])
+            cursor =  list(db[f"posts_{query}"].find({}, {"_id":0, "title":1, "text":1, "score":1, "created_at":1}, limit=100))
 
-        return render_template("/index.html", data=data, cursor=cursor, query=query) 
+
+
+
+        return render_template("/index.html", cursor=cursor,data=data, query=query) 
     else:
-        cursor = list(db[f"posts_Jokes"].find({}, {"_id":0, "title":1, "text":1, "score":1, "created_at":1}, limit=100))
-
-        return render_template("/index.html", data=[], cursor=cursor, query="sample")
+        
+        return render_template("/index.html",data=[], cursor=[], query="")
 if __name__ == "__main__":
     app.debug=True
     app.run()

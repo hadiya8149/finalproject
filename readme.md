@@ -1,6 +1,6 @@
-# Final Project Prototype
+# Reddit Real time sentiment analysis dashboard
 
-This repository contains the prototype for my final project, which is a real-time sentiment analysis system. The system uses Kafka to stream textual data from Reddit, and then uses natural language processing (NLP) techniques and machine learning algorithms to analyze the sentiment of the data. T
+
 
 Getting Started
 To get started, you will need to install the following dependencies:
@@ -47,63 +47,34 @@ $ bin/kafka-server-start.sh config/server.properties
 
 After setting the environment  run kafka-reddit and consumer.py
 
+
+### Training Naive bayes model for sentiment analysi
+
+Download a training dataset for sentiment analysis. I have  used imdb 50k movie reviews.
+Develop the vocab of dataset
+Calculate log priors for dataset and log likelihood of each word in the dataset.
+dump the log prior and log likelihood in pickle file for future use.
+
+### Data retrieval
+
+Search for a subreddit to get it's recent submissions.
+
+### Data preprocessing
+
+Use natural language processing techniques to clean the data. 
+
+### Predicting scores
+
+call predict_score function to calculate the score
+
+### Data storage in mongodb
+
+store the predicted scores in mongodb
+
+### Data visualization
+
+Generate a bar chart and a posts tab for data visualization
+
 ### Data collection and Sentiment analysis
 
-1. Data Collection:
-   - Integrate with reddit API to collect real-time textual data for sentiment analysis.
-```
-      Use praw library to connect to reddit API
-         reddit = praw.Reddit(
-                  client_id=CLIENT_ID,
-                 client_secret=CLIENT_SECRET,
-                 password=PASSWORD, 
-                 user_agent=USER_AGENT,
-                 username=USERNAME,)
-         for submission in reddit.subreddit("bitcoin").stream.submissions():
-             if submission.selftext is not empty
-              then 
-                    add it to list
-               after the posts list is complete send it to the producer
-               
 
-```
-
-
-
-   - Develop a data retrieval mechanism using Python to fetch and store the data.
-        - use kafka to store incoming data temporarily 
-        -    from the posts list send each post to the producer
-
-
-        - receive incoming data using kafka consumer
-        ```
-         while True:
-                     msg = consumer.poll(1.0)
-                     if msg is None:
-                         continue
-                     if msg.error():
-                         print("Consumer error: {}".format(msg.error()))
-                         continue     
-        ```
-                   
- 
-2. Sentiment Analysis:
-   - Apply natural language processing techniques to preprocess and analyze the collected textual data.
-```
-         def clean_text(text):
-             text = text.lower() # lower case
-             text = re.sub(r'[^\w\s]', '', text) #remove punctuation marks
-             text = re.sub(" +", " ", text) # remove multiple spaces
-             text = re.sub(r'http\S+', '', text, flags=re.MULTILINE) # remove links
-             stop_words = set(stopwords.words('english')) # remove stopwords
-             text = ' '.join([word for word in text.split() if word not in stop_words])
-             return text
-
-```
-
-   - Utilize machine learning algorithms to train a sentiment analysis model for accurate sentiment classification.
-        - implement naive bayes from scratch to train sentiment analysis 
-
-
-important note:
-The collected data is stored in reddit_posts_analysis.json

@@ -48,7 +48,7 @@
                   <thead>
                   <tr>
                     <th class="column1" rowspan="1" colspan="1" >Title</th>
-                    <th class="column2"  rowspan="1" colspan="2" ">text</th>
+                    <th class="column2"  rowspan="1" colspan="2" >text</th>
                     <th class="column3"  rowspan="1" colspan="1" >score</th>
                     <th class="column4"  rowspan="1" colspan="1" >created at</th>
       
@@ -83,25 +83,21 @@
           </div> -->
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script >
+
             const ctx = document.getElementById('myChart');
-            const data ={{data}}
+            // const pos = {{pos|safe}}
+            // const neg = {{neg|safe}}
+            const data ={{data|safe}};
             new Chart(ctx, {
               type: 'bar',
               data: {
                 labels: ['positive', 'negative'],
                 datasets: [{
-                  label: 'Sentiment analysis',
+                  label: 'Sentiment Score',
                   data: data,
                   borderWidth: 1,
                   backgroundColor:['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)']
                 }]
-              },
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true
-                  }
-                }
               }
             });
             </script>
